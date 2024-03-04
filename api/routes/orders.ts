@@ -8,9 +8,15 @@ router.get('/', (_req, res, _next) => {
     });
 });
 
-router.post('/', (_req, res, _next) => {
+router.post('/', (req, res, _next) => {
+    const order = {
+        id: req.body.id,
+        quantity: req.body.quantity
+    };
+
     res.status(201).json({
-        message: 'Order was created'
+        message: 'Order was created',
+        data: order
     });
 });
 
