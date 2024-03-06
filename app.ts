@@ -1,12 +1,14 @@
 import express from 'express';
-const app = express();
-require('dotenv').config();
-const morgan = require('morgan');
-
+import morgan from 'morgan';
 import mongoose from 'mongoose';
-
 import productRoutes from './api/routes/products';
 import orderRoutes from './api/routes/orders';
+import userRoutes from './api/routes/users';
+
+const app = express();
+app.use(express.json());
+
+require('dotenv').config();
 const mongoDBAtlasUri = process.env.MONGO_DB_ATLAS_URI as string;
 
 mongoose.connect(mongoDBAtlasUri, {  })
@@ -31,6 +33,7 @@ app.use((req, res, next) => {
 
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/users', userRoutes);
 
 class CustomError extends Error {
     status?: number;

@@ -1,8 +1,8 @@
 import express from 'express';
 import { Product } from '../models/product';
 import mongoose from 'mongoose';
-import type { ProductType } from '../types';
-const multer = require('multer');
+import multer from 'multer';
+
 const router = express.Router();
 const storage = multer.diskStorage({
     destination: function (_req: any, _file:any, cb: any) {
@@ -31,10 +31,10 @@ router.get('/', (_req, res, _next) => {
     Product.find()
     .select('name price _id productImage')
     .exec()
-    .then((docs: ProductType[]) => {
+    .then((docs) => {
         const response = {
             count: docs.length,
-            products: docs.map((doc: ProductType) => {
+            products: docs.map((doc) => {
                 return {
                     name: doc.name,
                     price: doc.price,
@@ -67,13 +67,13 @@ router.post("/", upload.single('productImage'),(req, res, next) => {
     });
     product
     .save()
-    .then((result: ProductType) => {
+    .then((result) => {
         res.status(201).json({
             message: 'Created product successfully',
             product: result
         });
     })
-    .catch((err: any) => {
+    .catch((err) => {
         console.log(err)
         res.status(500).json({
             error: err
@@ -86,7 +86,7 @@ router.get('/:id', (req, res, _next) => {
     Product.findById(id)
     .select('name price _id productImage')
     .exec()
-    .then((doc: ProductType) => {
+    .then((doc) => {
         if (doc) {
             const response = {
                 product: doc,
@@ -117,7 +117,7 @@ router.patch('/:id', (req, res, _next) => {
         
         });
     })
-    .catch((err: any) => {
+    .catch((err) => {
         console.log(err);
         res.status(500).json({
             error: err
@@ -129,7 +129,7 @@ router.delete('/:id', (req, res, _next) => {
     const { id } = req.params;
     Product.findByIdAndDelete({ _id: id })
     .exec()
-    .then((result: ProductType) => {
+    .then((result) => {
         res.status(204).json(result);
     })
     .catch((err: any) => {

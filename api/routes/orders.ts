@@ -1,8 +1,7 @@
 import express from 'express';
 import { Order } from '../models/order';
 import { Product } from '../models/product';
-import { OrderType, ProductType } from '../types';
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -11,7 +10,7 @@ router.get('/', (req, res, _next) => {
     .select('product quantity _id')
     .populate('product')
     .exec()
-    .then((docs: OrderType[]) => {
+    .then((docs) => {
         res.status(200).json({
             count: docs.length,
             orders: docs.map((doc) => {
@@ -36,7 +35,7 @@ router.get('/', (req, res, _next) => {
 
 router.post('/', (req, res, _next) => {
     Product.findById(req.body.productId)
-    .then((product: ProductType) => {
+    .then((product) => {
         if (!product) {
             return res.status(404).json({
                 message: 'Product not found'
@@ -47,15 +46,15 @@ router.post('/', (req, res, _next) => {
             quantity: req.body.quantity,
             product: product._id
         });
-        return order.save();
+        return order.save() as any;
         })
-        .then((result: OrderType) => {
+        .then((result: any) => {
             return res.status(201).json({
                 message: 'Order was created',
                 createdOrder: {
-                    _id: result._id,
-                    product: result.product,
-                    quantity: result.quantity
+                    _id: result?._id,
+                    product: result?.product,
+                    quantity: result?.quantity
                 },
                 request: {
                     type: 'GET',
@@ -75,7 +74,7 @@ router.get('/:id', (req, res, _next) => {
     Order.findById(id)
     .select('product quantity _id')
     .exec()
-    .then((doc: OrderType | null) => {
+    .then((doc) => {
         if (doc) {
             res.status(200).json({
                 order: doc,
@@ -101,8 +100,7 @@ router.delete('/:id', (req, res, _next) => {
     const { id } = req.params;
     Order.deleteOne({ _id: id })
     .exec()
-    .then((order: OrderType) => {
-        console.log(order);
+    .then((order) => {
         if (!order) {
             return res.status(404).json({
                 message: 'Order not found'
