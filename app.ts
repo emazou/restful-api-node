@@ -12,8 +12,8 @@ require('dotenv').config();
 const mongoDBAtlasUri = process.env.MONGO_DB_ATLAS_URI as string;
 
 mongoose.connect(mongoDBAtlasUri, {  })
-  .then(() => console.log('Conexión a MongoDB Atlas exitosa'))
-  .catch((err: any) => console.error('Error al conectar a MongoDB Atlas:', err));
+  .then(() => console.log('Connection to MongoDB Atlas established successfully!'))
+  .catch((err: any) => console.error('Error:', err));
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({
