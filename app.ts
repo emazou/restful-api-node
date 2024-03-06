@@ -2,7 +2,7 @@ import express from 'express';
 const app = express();
 require('dotenv').config();
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
+
 import mongoose from 'mongoose';
 
 import productRoutes from './api/routes/products';
@@ -11,12 +11,13 @@ const mongoDBAtlasUri = process.env.MONGO_DB_ATLAS_URI as string;
 
 mongoose.connect(mongoDBAtlasUri, {  })
   .then(() => console.log('Conexión a MongoDB Atlas exitosa'))
-  .catch((err) => console.error('Error al conectar a MongoDB Atlas:', err));
+  .catch((err: any) => console.error('Error al conectar a MongoDB Atlas:', err));
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-
+app.use(express.urlencoded({
+    extended: false
+    }));
+app.use('/uploads', express.static('/uploads'));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
