@@ -2,9 +2,11 @@ export type ProductType = {
     _id: string;
     name: string;
     price: number;
+    productImage: string;
 };
 
 export type OrderType = {
-    id: string;
+    _id: string;
     quantity: number;
+    product: string;
 };
