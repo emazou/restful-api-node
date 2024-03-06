@@ -54,4 +54,4 @@ app.use((error: CustomError, _req: any, res: any, _next: any) => {
     });
 });
 
-module.exports = app;
+export default app;

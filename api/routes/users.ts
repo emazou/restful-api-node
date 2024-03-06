@@ -2,8 +2,47 @@ import express from 'express';
 import { User } from '../models/user';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+
+router.post('/login', (req, res, _next) => {
+    User.findOne({ username: req.body.username })
+    .then((user) => {
+        if (!user) {
+            return res.status(404).json({
+                message: 'Auth failed'
+            });
+        }
+        bcrypt.compare(req.body.password, user.password, (err, result) => {
+            if (err) {
+                return res.status(401).json({
+                    message: 'Auth failed'
+                });
+            }
+            if (result) {
+                const token = jwt.sign({
+                    username: user.username,
+                    userId: user._id
+                }, process.env.JWT_KEY as string, {
+                    expiresIn: '1h'
+                });
+                return res.status(200).json({
+                    message: 'Auth successful',
+                    token
+                });
+            }
+            res.status(401).json({
+                message: 'Auth failed'
+            });
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            error: err
+        });
+    });
+});
 
 router.post('/signup', (req, res, next) => {
     User.find({ username: req.body.username })
